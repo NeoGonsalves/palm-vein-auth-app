@@ -1,0 +1,134 @@
+{% extends 'layout.html' %}
+
+{% block title %}PalmSecure SDK - Home{% endblock %}
+
+{% block content %}
+<div class="row gy-4">
+  <!-- Devices Card -->
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-lg rounded-4 border-0 bg-gradient" style="background: linear-gradient(135deg, #212529, #343a40);">
+      <div class="card-header d-flex justify-content-between align-items-center bg-transparent border-bottom-0 px-4 py-3">
+        <h5 class="text-white mb-0 d-flex align-items-center">
+          <i data-feather="list" class="feather-md me-2"></i>Available Devices
+        </h5>
+        <button id="refresh-devices" class="btn btn-sm btn-gradient px-3 py-1 rounded-pill d-flex align-items-center gap-1">
+          <i data-feather="refresh-cw" class="feather-sm"></i> Refresh
+        </button>
+      </div>
+      <div class="card-body bg-dark rounded-bottom-4 p-0">
+        <div id="devices-container" class="p-3">
+          {% if devices %}
+          <div class="table-responsive rounded">
+            <table class="table table-hover text-white mb-0 align-middle">
+              <thead class="text-muted small text-uppercase border-bottom border-secondary">
+                <tr>
+                  <th>#</th>
+                  <th>Manufacturer</th>
+                  <th>Product</th>
+                  <th>Serial Number</th>
+                  <th class="text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for device in devices %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ device.manufacturer }}</td>
+                  <td>{{ device.product }}</td>
+                  <td>{{ device.serial_number }}</td>
+                  <td class="text-center">
+                    <form action="{{ url_for('connect_device', device_index=loop.index0) }}" method="post">
+                      <button type="submit" class="btn btn-sm btn-gradient rounded-pill px-3 py-1">
+                        Connect
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="text-center py-5 text-white">
+            <div class="mb-3">
+              <i data-feather="alert-circle" class="feather-lg"></i>
+            </div>
+            <h5>No PalmSecure Devices Found</h5>
+            <p class="text-muted">Please connect a PalmSecure device and click Refresh</p>
+          </div>
+          {% endif %}
+        </div>
+        <div id="loading-spinner" class="text-center py-5 d-none">
+          <div class="spinner-border text-gradient" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-2 text-white">Searching for devices...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Device Info Card -->
+  <div class="col-12 col-lg-4">
+    <div class="card shadow-lg rounded-4 border-0 bg-gradient" style="background: linear-gradient(135deg, #1c1f23, #2b2f36);">
+      <div class="card-header bg-transparent border-bottom-0 px-4 py-3">
+        <h5 class="text-white mb-0 d-flex align-items-center">
+          <i data-feather="info" class="feather-md me-2"></i>Device Information
+        </h5>
+      </div>
+      <div class="card-body bg-dark rounded-bottom-4 text-white px-4 py-3">
+        <div class="mb-4">
+          <h6 class="text-gradient fw-semibold">PalmSecure Device</h6>
+          <p class="text-muted mb-1">USB VID: <span class="text-white">0x04C5</span></p>
+          <p class="text-muted mb-1">USB PID: <span class="text-white">0x125A</span></p>
+          <p class="text-muted">Manufacturer: <span class="text-white">FUJITSU FRONTECH LIMITED</span></p>
+        </div>
+        <div class="mb-4">
+          <h6 class="text-gradient fw-semibold">Compatible Drivers</h6>
+          <ul class="list-unstyled small text-muted">
+            <li>Version 3.1.6.3 (09/20/2013)</li>
+            <li>Version 3.1.7.4 (07/09/2017)</li>
+            <li>Version 3.2.0.1 (07/14/2022)</li>
+          </ul>
+        </div>
+        <div class="text-center">
+          <a href="{{ url_for('diagnostics') }}" class="btn btn-gradient btn-lg rounded-pill px-4 py-2 shadow">
+            <i data-feather="activity" class="feather-sm me-2"></i> Run Diagnostics
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+<script>
+  const socket = io("http://localhost:5000");
+
+  socket.on("connect", () => {
+    console.log("WebSocket connected");
+  });
+
+  socket.on("disconnect", () => {
+    console.log("WebSocket disconnected");
+  });
+
+  socket.on("bio_validation", (data) => {
+    console.log("Bio validation result:", data);
+    alert("Bio Match Result:\n" + JSON.stringify(data, null, 2));
+  });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize refresh button behavior
+        const refreshBtn = document.getElementById('refresh-devices');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', function() {
+                refreshDevices();
+            });
+        }
+    });
+</script>
+{% endblock %}
