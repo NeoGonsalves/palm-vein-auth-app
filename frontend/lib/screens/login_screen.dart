@@ -44,13 +44,21 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             TextField(
               controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email or Phone'),
+              decoration: const InputDecoration(
+                labelText: 'Email or Phone',
+                icon: Icon(Icons.email_rounded),
+                iconColor: Color.fromRGBO(149, 61, 184, 1),
+              ),
             ),
             const SizedBox(height: 10),
             TextField(
               controller: passwordController,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(
+                labelText: 'Password',
+                icon: Icon(Icons.password_rounded),
+                iconColor: Color.fromRGBO(149, 61, 184, 1),
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(onPressed: login, child: const Text('Login')),

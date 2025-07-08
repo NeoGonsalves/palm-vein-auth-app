@@ -83,21 +83,38 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
+              decoration: const InputDecoration(
+                labelText: 'Name',
+                icon: Icon(Icons.navigate_next_outlined),
+                iconColor: Color.fromRGBO(149, 61, 184, 1),
+              ),
             ),
             TextField(
               controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                icon: Icon(Icons.email_rounded),
+                iconColor: Color.fromRGBO(149, 61, 184, 1),
+              ),
+
               keyboardType: TextInputType.emailAddress,
             ),
             TextField(
               controller: phoneController,
-              decoration: const InputDecoration(labelText: 'Phone'),
+              decoration: const InputDecoration(
+                labelText: 'Phone',
+                icon: Icon(Icons.phone),
+                iconColor: Color.fromRGBO(149, 61, 184, 1),
+              ),
               keyboardType: TextInputType.phone,
             ),
             TextField(
               controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
+              decoration: const InputDecoration(
+                labelText: 'Password',
+                icon: Icon(Icons.email_rounded),
+                iconColor: Color.fromRGBO(149, 61, 184, 1),
+              ),
               obscureText: true,
             ),
             const SizedBox(height: 20),

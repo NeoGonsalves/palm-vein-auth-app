@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "546510001443",
+    "project_id": "biopay-6ff14",
+    "storage_bucket": "biopay-6ff14.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546510001443:android:03155b2715bdcdf12fa896",
+        "android_client_info": {
+          "package_name": "com.example.zk_palmscanner_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJRNnwNYsiC7xT8lxO_lfzKooDGPfe5-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
