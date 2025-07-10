@@ -5,8 +5,9 @@ PalmSecure SDK Demo Web Application
 
 This script provides a web-based demonstration of the PalmSecure SDK functionality.
 """
-import eventlet
-eventlet.monkey_patch()
+from gevent import monkey
+monkey.patch_all()
+
 import logging
 import os
 import warnings
@@ -34,7 +35,8 @@ warnings.filterwarnings("ignore")
 # Flask app and extensions
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", os.urandom(24).hex())
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 socketio = SocketIO(app, cors_allowed_origins="*")
 limiter = Limiter(get_remote_address, app=app, default_limits=["200 per day", "50 per hour"])
 
@@ -483,7 +485,17 @@ def cleanup(exception=None):
 
 if __name__ == '__main__':
     try:
-        socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+        import gevent
+        import gevent.monkey
+        gevent.monkey.patch_all()
+
+        from gevent.pywsgi import WSGIServer
+        from geventwebsocket.handler import WebSocketHandler
+
+        print("Starting app on http://localhost:5000")
+        http_server = WSGIServer(('0.0.0.0', 5000), app, handler_class=WebSocketHandler)
+        http_server.serve_forever()
     except Exception as e:
         logger.error(f"Error starting app: {str(e)}")
         sys.exit(1)
+

@@ -36,19 +36,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      final url = Uri.parse('https://your-api.com/register'); // TODO: Replace
+      final url = Uri.parse('http://localhost:5000/api/register_user');
+
       final response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'name': name,
-          'email': email,
-          'phone': phone,
-          'password': password,
-        }),
+        'bio_id': password, // since you’re using password as biometric ID
+        'username': name,
+        'email': email,
+        'phone': phone,
+}),
+
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201
+      ){
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const LoginScreen()),

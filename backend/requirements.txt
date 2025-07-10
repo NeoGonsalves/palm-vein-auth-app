@@ -1,0 +1,8 @@
+Flask==2.3.3
+Flask-Cors==4.0.0
+Flask-SocketIO==5.3.6
+Flask-Limiter==3.5.0
+eventlet==0.33.3
+pymongo==4.6.3
+bcrypt==4.1.2
+PyJWT==2.8.0
