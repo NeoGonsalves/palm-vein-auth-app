@@ -38,18 +38,19 @@ class _OtpPageState extends State<OtpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      backgroundColor: Color.fromRGBO(239, 211, 255, 1),
       body: SingleChildScrollView(
         child: ListView(
           shrinkWrap: true,
           children: [
-            Image.asset('images/enterphone.jpg', height: 330, width: 330),
+            Image.asset('images/otp.png', height: 200, width: 200),
             Center(
               child: Text('OTP verification', style: TextStyle(fontSize: 30)),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
               child: Text(
-                'Enter OTP sent to ${widget.phonenumber1}',
+                'Enter OTP sent to +91 ${widget.phonenumber1}',
                 textAlign: TextAlign.center,
               ),
             ),
@@ -70,14 +71,14 @@ class _OtpPageState extends State<OtpPage> {
           signIn();
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromRGBO(206, 69, 233, 1),
+          backgroundColor: Color.fromRGBO(239, 160, 255, 1),
           padding: const EdgeInsets.all(16.0),
         ),
         child: Text(
           'Verify & Proceed',
           style: TextStyle(
             fontSize: 18.0,
-            color: Colors.white,
+            color: const Color.fromARGB(255, 255, 255, 255),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -88,9 +89,18 @@ class _OtpPageState extends State<OtpPage> {
   Widget textcode() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(6.0),
+        padding: const EdgeInsets.all(12.0),
         child: Pinput(
           length: 6,
+          defaultPinTheme: PinTheme(
+            width: 56,
+            height: 56,
+            textStyle: TextStyle(fontSize: 20, color: Colors.white),
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(239, 160, 255, 1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
           onChanged: (value) {
             setState(() {
               code = value;
