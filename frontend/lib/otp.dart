@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:get/get.dart';
-//import 'package:zk_palmscanner_app/screens/phoneauth.dart';
+import 'package:lottie/lottie.dart';
 import 'package:zk_palmscanner_app/wrapper.dart';
 
 class OtpPage extends StatefulWidget {
@@ -15,97 +15,147 @@ class OtpPage extends StatefulWidget {
 }
 
 class _OtpPageState extends State<OtpPage> {
-  var code = '';
+  String code = '';
+
   signIn() async {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
       verificationId: widget.vid,
       smsCode: code,
     );
     try {
-      await FirebaseAuth.instance.signInWithCredential(credential).then((
-        value,
-      ) {
-        Get.offAll(Wrapper());
-      });
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // ✅ Show success animation
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset(
+                'assets/animations/lock_tick.json',
+                height: 150,
+                fit: BoxFit.contain,
+                frameRate: FrameRate.max, // Ensures maximum possible FPS
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                "Verified Successfully!",
+                style: TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      await Future.delayed(const Duration(seconds: 2));
+      Navigator.of(context).pop(); // Close dialog
+      Get.offAll(() => const Wrapper());
     } on FirebaseAuthException catch (e) {
-      Get.snackbar('Error has Occured', e.code);
+      Get.snackbar('Error', e.code);
     } catch (e) {
-      Get.snackbar('Error has occured', e.toString());
+      Get.snackbar('Error', e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: Color.fromRGBO(239, 211, 255, 1),
-      body: SingleChildScrollView(
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            Image.asset('images/otp.png', height: 200, width: 200),
-            Center(
-              child: Text('OTP verification', style: TextStyle(fontSize: 30)),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-              child: Text(
+      backgroundColor: const Color.fromARGB(255, 255, 252, 245), // Off-white
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: [
+              const SizedBox(height: 60),
+              const Text(
+                'OTP Verification',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 5, 68, 4), // Dark green
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
                 'Enter OTP sent to +91 ${widget.phonenumber1}',
                 textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.black54, fontSize: 14),
               ),
-            ),
-            SizedBox(height: 20),
-            textcode(),
-            SizedBox(height: 80),
-            button(),
-          ],
+              const SizedBox(height: 40),
+              buildOtpInput(),
+              const SizedBox(height: 60),
+              buildVerifyButton(),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget button() {
-    return Center(
+  Widget buildOtpInput() {
+    final defaultTheme = PinTheme(
+      width: 56,
+      height: 56,
+      textStyle: const TextStyle(
+        fontSize: 20,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 232, 255, 232), // light green box
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color.fromARGB(255, 5, 68, 4),
+        ), // dark green border
+      ),
+    );
+
+    return Pinput(
+      length: 6,
+      defaultPinTheme: defaultTheme,
+      focusedPinTheme: defaultTheme.copyWith(
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 89, 212, 40), // light green
+          borderRadius: BorderRadius.circular(12),
+        ),
+        textStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      onChanged: (value) {
+        setState(() => code = value);
+      },
+    );
+  }
+
+  Widget buildVerifyButton() {
+    return SizedBox(
+      width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          signIn();
-        },
+        onPressed: signIn,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color.fromRGBO(239, 160, 255, 1),
-          padding: const EdgeInsets.all(16.0),
+          backgroundColor: const Color.fromARGB(255, 5, 68, 4), // dark green
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
-        child: Text(
+        child: const Text(
           'Verify & Proceed',
-          style: TextStyle(
-            fontSize: 18.0,
-            color: const Color.fromARGB(255, 255, 255, 255),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget textcode() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Pinput(
-          length: 6,
-          defaultPinTheme: PinTheme(
-            width: 56,
-            height: 56,
-            textStyle: TextStyle(fontSize: 20, color: Colors.white),
-            decoration: BoxDecoration(
-              color: Color.fromRGBO(239, 160, 255, 1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          onChanged: (value) {
-            setState(() {
-              code = value;
-            });
-          },
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );

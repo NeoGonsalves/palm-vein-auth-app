@@ -24,6 +24,15 @@ class _PhoneHomeState extends State<PhoneHome> {
       return;
     }
 
+    if (phonenumber.text.length != 10 ||
+        !RegExp(r'^[0-9]+$').hasMatch(phonenumber.text)) {
+      Get.snackbar(
+        'Invalid Number',
+        'Please enter a valid 10-digit phone number',
+      );
+      return;
+    }
+
     setState(() => isLoading = true);
 
     try {
@@ -51,162 +60,140 @@ class _PhoneHomeState extends State<PhoneHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset('images/background.jpg', fit: BoxFit.cover),
-          ),
-
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                children: [
-                  const SizedBox(height: 40),
-                  Row(
-                    children: const [
-                      Icon(
-                        Icons.fingerprint_outlined,
-                        size: 32,
-                        color: Color.fromARGB(255, 89, 212, 40),
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        'BioPay',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 89, 212, 40),
-                        ),
-                      ),
-                    ],
+      backgroundColor: const Color(0xFFF9F9F9), // Off-white background
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 40),
+              Row(
+                children: const [
+                  Icon(
+                    Icons.fingerprint,
+                    size: 32,
+                    color: Color(0xFF1B5E20), // Dark green
                   ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Secure UPI • PalmPay',
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
-                    textDirection: TextDirection.ltr,
-                  ),
-                  const SizedBox(height: 60),
-
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Enter mobile number',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  SizedBox(width: 10),
+                  Text(
+                    'BioPay',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1B5E20),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  TextField(
-                    controller: phonenumber,
-                    keyboardType: TextInputType.phone,
-                    maxLength: 10,
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 89, 212, 40),
-                    ),
-                    decoration: InputDecoration(
-                      prefixText: '+91 ',
-                      prefixIcon: Icon(Icons.phone),
-                      prefixStyle: const TextStyle(color: Colors.white),
-                      counterText: '',
-                      hintText: 'XXXXXXXXXX',
-                      hintStyle: const TextStyle(color: Colors.white38),
-                      filled: true,
-                      fillColor: const Color.fromARGB(255, 16, 70, 12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(
-                          color: Color.fromARGB(255, 89, 212, 40),
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: agreed,
-                        activeColor: const Color.fromARGB(255, 89, 212, 40),
-                        checkColor: Colors.black,
-                        onChanged: (val) => setState(() => agreed = val!),
-                      ),
-                      const Expanded(
-                        child: Text.rich(
-                          TextSpan(
-                            text: 'I agree to ',
-                            style: TextStyle(color: Colors.white70),
-                            children: [
-                              TextSpan(
-                                text: 'terms of use',
-                                style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  color: Color.fromARGB(255, 89, 212, 40),
-                                ),
-                              ),
-                              TextSpan(text: ' & '),
-                              TextSpan(
-                                text: 'privacy policy',
-                                style: TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  color: Color.fromARGB(255, 89, 212, 40),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  SizedBox(
-                    width: double.infinity,
-                    child: isLoading
-                        ? const Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Color.fromARGB(255, 255, 255, 255),
-                              ),
-                            ),
-                          )
-                        : ElevatedButton(
-                            onPressed: sendcode,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color.fromARGB(
-                                255,
-                                42,
-                                105,
-                                17,
-                              ),
-                              foregroundColor: Colors.black,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            child: const Text(
-                              'Get OTP',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
                   ),
                 ],
               ),
-            ),
+              const SizedBox(height: 8),
+              const Text(
+                'UPI • Palm Authentication',
+                style: TextStyle(fontSize: 14, color: Colors.black54),
+              ),
+              const SizedBox(height: 40),
+              const Text(
+                'Enter mobile number',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: phonenumber,
+                keyboardType: TextInputType.phone,
+                maxLength: 10,
+                decoration: InputDecoration(
+                  prefixText: '+91 ',
+                  counterText: '',
+                  hintText: 'Enter 10-digit mobile number',
+                  prefixIcon: const Icon(Icons.phone, color: Colors.black45),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Color(0xFF1B5E20)),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(
+                      color: Color(0xFF1B5E20),
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Checkbox(
+                    value: agreed,
+                    activeColor: const Color(0xFF1B5E20),
+                    checkColor: Colors.white,
+                    onChanged: (val) => setState(() => agreed = val!),
+                  ),
+                  Expanded(
+                    child: Text.rich(
+                      TextSpan(
+                        text: 'I agree to ',
+                        style: const TextStyle(color: Colors.black54),
+                        children: [
+                          TextSpan(
+                            text: 'terms of use',
+                            style: const TextStyle(
+                              color: Color(0xFF1B5E20),
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                          const TextSpan(text: ' & '),
+                          TextSpan(
+                            text: 'privacy policy',
+                            style: const TextStyle(
+                              color: Color(0xFF1B5E20),
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Color(0xFF1B5E20),
+                          ),
+                        ),
+                      )
+                    : ElevatedButton(
+                        onPressed: sendcode,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1B5E20),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: const Text(
+                          'Get OTP',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
