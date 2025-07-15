@@ -25,7 +25,6 @@ class _OtpPageState extends State<OtpPage> {
     try {
       await FirebaseAuth.instance.signInWithCredential(credential);
 
-      // ✅ Show success animation
       showDialog(
         context: context,
         barrierDismissible: false,

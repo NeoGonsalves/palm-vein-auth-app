@@ -67,6 +67,9 @@ flutter:
   assets:
     - images/
     - assets/animations/lock_tick.json
+    - assets/animations/Login_Screen1.json
+    - assets/animations/Transition_Get_to_Wrapper.json
+    - assets/animations/Message_Sent.json
 
 
   # To add assets to your application, add an assets section, like this:
