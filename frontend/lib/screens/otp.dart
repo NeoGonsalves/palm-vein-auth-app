@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:zk_palmscanner_app/wrapper.dart';
+import 'package:zk_palmscanner_app/screens/wrapper.dart';
 
 class OtpPage extends StatefulWidget {
   final String vid;
