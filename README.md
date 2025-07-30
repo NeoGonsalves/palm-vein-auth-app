@@ -106,79 +106,101 @@ Start the Flask server:
 
 python demo_app.py
 
-Step 2: Flutter App Setup
+# ZK Palm Scanner App
 
-Navigate to the Flutter project:
+A Flutter-based biometric authentication app integrating with the ZK PalmSecure SDK for palm vein recognition. Real-time validation is supported via WebSocket.
 
+---
+
+## 📦 Step 2: Flutter App Setup
+
+### 1. Navigate to the Flutter project
+
+bash
 cd zk_palmscanner_app
 
-Install dependencies:
+2. Install dependencies
 
 flutter pub get
 
-Update backendBaseUrl in lib/config.dart:
+3. Update API base URLs in lib/config.dart
+
+Replace YOUR_LOCAL_IP with your machine’s local IP address:
 
 const String backendBaseUrl = 'http://YOUR_LOCAL_IP:5000';
 const String websocketUrl = 'ws://YOUR_LOCAL_IP:5000/socket.io/?EIO=4&transport=websocket';
 
-Run on physical device (required for USB SDK):
+    ⚠️ Note: Do not use localhost or 127.0.0.1 for backendBaseUrl unless you're running the app on an emulator.
+
+4. Run the app (physical device required for USB SDK)
 
 flutter run --release
 
-Note: Do not use localhost or 127.0.0.1 for backendBaseUrl unless running in emulator.
+⚙️ Step 3: SDK Integration (Android)
 
-Step 3: SDK Integration (Android)
+    Copy SDK Files
+    Place the ZK SDK .jar and .so files inside:
 
-    Copy the ZK SDK JARs and .so libraries into android/app/libs
+android/app/libs/
 
-    Add JNI and packaging config in build.gradle.kts
+Configure JNI and packaging options
+Modify android/app/build.gradle.kts:
 
-    Use MethodChannel to call native functions from Flutter
+    android {
+        ...
+        sourceSets {
+            getByName("main") {
+                jniLibs.srcDirs("libs")
+            }
+        }
+        packagingOptions {
+            pickFirst("lib/**/libzkfinger.so")
+        }
+    }
 
-    USB permission is requested via PendingIntent and BroadcastReceiver
+    Add native code bridging
+    Use Flutter’s MethodChannel to invoke native SDK methods from Dart.
 
-See integration steps in Android MainActivity.kt and Manifest.
-API Endpoints
+    Handle USB Permissions
+    Set up PendingIntent and BroadcastReceiver in MainActivity.kt for USB permission handling.
 
-POST /api/register_user
+    🔍 See integration details in MainActivity.kt and AndroidManifest.xml.
 
-Registers a new user with email, phone, password, and bioId.
+📡 API Endpoints
+Method	Endpoint	Description
+POST	/api/register_user	Registers a user (email, phone, password, bioId)
+POST	/api/validate_bio	Validates bioId and returns user info
+POST	/api/simulate_bio	Triggers a mock validation event (for dev)
+GET	/api/device/status	Returns device status (real/simulated)
+🔄 WebSocket Event
 
-POST /api/validate_bio
+    bio_validation — Emitted upon successful biometric match or simulation.
 
-Validates bioId and returns user details if matched.
+📝 Notes
 
-POST /api/simulate_bio
+    A ZK PalmSecure device and SDK are required for actual biometric scanning.
 
-Emits a mock validation event for development.
+    For development without hardware, use demo_app.py to simulate device behavior.
 
-GET /api/device/status
+    WebSocket is used for real-time push of validation results to the client.
 
-Returns current device status (simulated or real).
+🚧 To-Do / Future Improvements
 
-WebSocket Event: bio_validation
+Integrate Firebase or OAuth (Google Sign-In)
 
-Emitted on successful scan simulation or match.
-Notes
+Add biometric template management (enroll/delete)
 
-    Device scanning and real biometric validation require the ZK PalmSecure device and SDK.
+Implement live detection, retries, and fallback flows
 
-    For development without hardware, demo_app.py includes simulation endpoints.
+Secure backend with HTTPS and token-based auth
 
-    WebSocket is used to push validation results from backend to client in real-time.
+    Improve Flutter UI for error/success feedback
 
-To-Do / Future Improvements
+📄 License
 
-    Integrate Firebase or OAuth-based Google Sign-In
+This project is for research and prototyping only. You may modify or distribute with proper attribution.
 
-    Add biometric template management (enrollment, deletion)
+    ⚠️ The ZK PalmSecure SDK is governed by the vendor’s license agreement and must not be redistributed.
 
-    Support additional SDK features (live detection, retries)
 
-    Deploy backend with HTTPS and proper authorization headers
-
-    Add Flutter error handling and success/fail UI states
-
-License
-
-This project is intended for research and prototyping purposes. You may modify and distribute with proper attribution. The ZK PalmSecure SDK is subject to the vendor’s license agreement and may not be redistributed.
+---
