@@ -17,7 +17,7 @@ class OtpPage extends StatefulWidget {
 class _OtpPageState extends State<OtpPage> {
   String code = '';
 
-  signIn() async {
+  Future<void> signIn() async {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
       verificationId: widget.vid,
       smsCode: code,

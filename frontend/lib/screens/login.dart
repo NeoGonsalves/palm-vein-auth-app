@@ -15,7 +15,7 @@ class _PhoneHomeState extends State<PhoneHome> {
   bool agreed = true;
   bool isLoading = false;
 
-  sendcode() async {
+  Future<void> sendcode() async {
     if (!agreed) {
       Get.snackbar(
         'Consent Required',
